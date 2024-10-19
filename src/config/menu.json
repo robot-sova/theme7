@@ -1,0 +1,88 @@
+{
+  "main": [
+    {
+      "name": "All Pages",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Elements",
+          "url": "/elements"
+        },
+        {
+          "name": "About",
+          "url": "/about"
+        },
+        {
+          "name": "Changelog",
+          "url": "/changelog"
+        },
+        {
+          "name": "Integration",
+          "url": "/integration"
+        },
+
+        {
+          "name": "Case Studies",
+          "url": "/case"
+        },
+        {
+          "name": "Terms & Conditions",
+          "url": "/terms-conditions"
+        },
+        {
+          "name": "Blog",
+          "url": "/blog"
+        },
+        {
+          "name": "Book a Free Demo",
+          "url": "/book-demo"
+        },
+        {
+          "name": "Privacy Policy",
+          "url": "/privacy-policy"
+        },
+        {
+          "name": "404 Page",
+          "url": "/404"
+        }
+      ]
+    },
+    {
+      "name": "Features",
+      "url": "/features"
+    },
+    {
+      "name": "Pricing",
+      "url": "/pricing"
+    },
+    {
+      "name": "Contact Us",
+      "url": "/contact"
+    }
+  ],
+  "footer_main_links": [
+    {
+      "name": "Integration",
+      "url": "/integration"
+    },
+    {
+      "name": "Pricing",
+      "url": "/pricing"
+    },
+    {
+      "name": "Contact Us",
+      "url": "/contact"
+    }
+  ],
+  "footer_quick_links": [
+    {
+      "name": "Privacy Policy",
+      "url": "/privacy-policy"
+    },
+    {
+      "name": "Terms & Conditions",
+      "url": "/terms-conditions"
+    }
+  ]
+}

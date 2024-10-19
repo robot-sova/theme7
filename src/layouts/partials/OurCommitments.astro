@@ -1,0 +1,35 @@
+---
+import OurCommitmentCard from "@/components/OurCommitmentCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+interface Card {
+  iconSrc: string;
+  title: string;
+  description: string;
+}
+
+interface BusinessTransformationProps {
+  title: string;
+  description: string;
+  cards: Card[];
+}
+
+const { title, description, cards }: BusinessTransformationProps = (await getEntry("sections", "our-commitments")).data;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="grid lg:grid-cols-3 items-center gap-8">
+      <div data-aos="fade-up-sm">
+        {title && <h2 class="mb-4 text-h4" set:html={markdownify(title)} />}
+        {description && <p set:html={markdownify(description)} />}
+      </div>
+      {
+        cards.map(({ title, description }, index) => (
+          <OurCommitmentCard title={title} description={description} aosDelay={++index * 100} />
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,51 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { plan, audience, price, price_prefix, users, features, button, isMiddle } = Astro.props;
+---
+
+<div
+  class:list={[
+    "px-5 rounded-4xl pt-10",
+    { "bg-theme-light/55 hover:bg-theme-light transition-colors duration-300 rounded-4xl": isMiddle },
+  ]}
+>
+  <div class="flex flex-col items-center mb-5">
+    {plan && <h2 class="text-lg text-white font-medium mb-2" set:html={markdownify(plan)} />}
+    {audience && <p class="text-sm font-light mb-6" set:html={markdownify(audience)} />}
+    <div class="flex items-center gap-x-4 h-auto mb-4">
+      <span class="text-h5 font-normal text-white" set:html={markdownify(price_prefix)} />
+      <h2 class="text-h2 xl:text-h" set:html={markdownify(price)} />
+    </div>
+    {users && <p class="text-sm font-light" set:html={users} />}
+  </div>
+
+  <p class="text-h5 text-white font-medium">Main Features</p>
+  <ul class="w-full">
+    {
+      features.map((feature: string) => (
+        <li class="flex items item-center justify-between py-5 border-b border-white/20">
+          <span class="font-medium" set:html={markdownify(feature)} />
+          <img src="/images/icons/green_tick.svg" class="self-center" />
+        </li>
+      ))
+    }
+  </ul>
+  {
+    button && button.enable && (
+      <div class="py-10">
+        <a
+          href={button.link}
+          class:list={[
+            {
+              "btn w-full text-center bg-tertiary/50 text-white border border-theme-light hover:btn-primary": !isMiddle,
+            },
+            { "btn w-full text-center text-white bg-primary border border-primary hover:btn-primary": isMiddle },
+          ]}
+        >
+          {button.label}
+        </a>
+      </div>
+    )
+  }
+</div>

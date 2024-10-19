@@ -1,0 +1,58 @@
+---
+import BlogCard from "@/components/BlogCard.astro";
+import config from "@/config/config.json";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import taxonomyFilter from "@/lib/utils/taxonomyFilter";
+import PageHeader from "@/partials/PageHeader.astro";
+
+// get static paths for all categories
+export async function getStaticPaths() {
+  const BLOG_FOLDER = "blog";
+  const categories = await getTaxonomy(BLOG_FOLDER, "categories");
+
+  return categories.map((category) => {
+    return {
+      params: { category },
+    };
+  });
+}
+
+const { category } = Astro.params;
+
+// get posts by category
+const BLOG_FOLDER = "blog";
+const posts = await getSinglePage(BLOG_FOLDER);
+const filterByCategories = taxonomyFilter(posts, "categories", category!);
+const sortedPosts = sortByDate(filterByCategories);
+const allUniqueCategories = await getTaxonomy(BLOG_FOLDER, "categories");
+const totalPages: number = Math.ceil(sortedPosts.length / config.settings.pagination);
+---
+
+<Base title={"Category - " + category}>
+  <PageHeader title={category} />
+  <section class="section">
+    <div class="container">
+      <div class="section-content">
+        <ul class="px-10 flex flex-wrap justify-center items-center gap-2 mb-14">
+          {
+            allUniqueCategories &&
+              allUniqueCategories.map((cat) => (
+                <li>
+                  <a class:list={["blog-category-item", { active: category === cat }]} href={"/categories/" + cat}>
+                    {cat}
+                  </a>
+                </li>
+              ))
+          }
+        </ul>
+
+        <div class="grid grid-cols-2 gap-8">
+          {sortedPosts.map((post) => <BlogCard data={post} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

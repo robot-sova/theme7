@@ -1,0 +1,149 @@
+---
+import config from "@/config/config.json";
+import { markdownify } from "@/lib/utils/textConverter";
+
+interface Hero {
+  title: string;
+  subtitle: string;
+  contact: string;
+  email: string;
+  phone: string;
+}
+
+const hero = Astro.props.hero as Hero;
+const { title, subtitle, contact, email, phone } = hero;
+const { contact_form_action }: { contact_form_action: string } = config.params;
+---
+
+<section class="section relative overflow-hidden">
+  <div class="container">
+    <div class="row pt-10 lg:pt-20 g-5">
+      <div class="md:col-6 xl:col-7">
+        <div class="flex flex-col justify-between h-full md:py-12">
+          <div>
+            {
+              title && (
+                <h1
+                  class="text-h2 lg:text-h1 mb-6"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="0"
+                  set:html={markdownify(title)}
+                />
+              )
+            }
+            {
+              subtitle && (
+                <p
+                  class="text-lg text-white font-medium mb-7"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="100"
+                  set:html={markdownify(subtitle)}
+                />
+              )
+            }
+          </div>
+          <div data-aos="fade-up-sm" data-aos-delay="200">
+            {contact && <p class="text-lg text-white font-medium mb-7" set:html={markdownify(contact)} />}
+            <ul class="list-disc ml-4 text-white leading-loose">
+              <li>
+                <span>Email:</span>
+                {
+                  email && (
+                    <a class="text-text" href={`mailto:${email}`}>
+                      {email}
+                    </a>
+                  )
+                }
+              </li>
+              <li>
+                <span>Phone: </span>
+                {
+                  phone && (
+                    <a class="text-text" href={`tel:${phone}`}>
+                      {phone}
+                    </a>
+                  )
+                }
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="md:col-6 xl:col-5">
+        <div class="border border-border shadow-inset shadow-shadow/60 p-10 rounded-4xl">
+          <form action={contact_form_action} method="post">
+            <div class="grid grid-cols-2 gap-6">
+              <div class="col-span-2 sm:col-span-1">
+                <label for="firstName" class="form-label">First Name *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  required
+                  aria-required="true"
+                  class="form-input"
+                  placeholder="Your First Name"
+                />
+              </div>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="lastName" class="form-label">Last Name *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  class="form-input"
+                  required
+                  aria-required="true"
+                  placeholder="Your Last Name"
+                />
+              </div>
+              <div class="col-span-2">
+                <label for="email" class="form-label">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-input"
+                  required
+                  aria-required="true"
+                  placeholder="johndoe@example.com"
+                />
+              </div>
+
+              <div class="col-span-2">
+                <label for="subject" class="form-label">Subject *</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  class="form-input"
+                  required
+                  aria-required="true"
+                  placeholder="Write Your Subject Here"
+                />
+              </div>
+
+              <div class="col-span-2">
+                <label for="message" class="form-label">Write Message *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="3"
+                  class="form-input h-auto"
+                  required
+                  aria-required="true"
+                  placeholder="Write Your Message Here"></textarea>
+              </div>
+
+              <div class="col-span-2">
+                <button type="submit" class="btn bg-secondary py-5 px-7 border-secondary text-theme-light leading-none">
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

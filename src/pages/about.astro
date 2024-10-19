@@ -1,0 +1,23 @@
+---
+import AboutGallery from "@/components/AboutGallery.astro";
+import Clients from "@/components/Clients.astro";
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import OurTeamMembers from "@/partials/OurTeamMembers.astro";
+import OurValues from "@/partials/OurValues.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import type { IndexMDProps } from "@/types";
+import { getEntry } from "astro:content";
+
+const indexData = (await getEntry("about", "-index")).data as IndexMDProps;
+const { title, subtitle, description, gallery } = indexData.hero;
+---
+
+<Base {...indexData}>
+  <PageHeader title={title} subtitle={description} desc={subtitle} />
+  <AboutGallery gallery={gallery} />
+  <Clients />
+  <OurValues />
+  <OurTeamMembers />
+  <CallToAction />
+</Base>

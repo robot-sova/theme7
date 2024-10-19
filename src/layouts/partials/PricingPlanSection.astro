@@ -1,0 +1,125 @@
+---
+import PriceCard from "@/components/PriceCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+// Define the Props interface
+interface Button {
+  enable: boolean;
+  label: string;
+  link: string;
+}
+
+interface Plan {
+  plan: string;
+  audience: string;
+  price_prefix: string;
+  price: string;
+  users: string;
+  features: string[];
+  button: Button;
+}
+
+interface OurPricingPlanProps {
+  title: string;
+  subtitle: string;
+  plans: {
+    monthly: Plan[];
+    yearly: Plan[];
+  };
+}
+
+const { title, subtitle } = Astro.props;
+const { plans }: OurPricingPlanProps = (await getEntry("sections", "pricing")).data;
+---
+
+<section class="section section-page-heading xl:pb-24">
+  <div class="container">
+    <div class="section-intro lg:col-6 mx-auto text-center">
+      {
+        title && (
+          <h2 class="lg:text-[4.5rem] lg:leading-[1.2] mb-4" data-aos="fade-up-sm" set:html={markdownify(title)} />
+        )
+      }
+      {subtitle && <p class="subtitle" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(subtitle)} />}
+
+      <!-- price toggle buttons -->
+      <div
+        data-aos="fade-up-sm"
+        data-aos-delay="150"
+        class="mt-10 flex items-center gap-x-3 lg:gap-x-5 justify-center text-sm font-light transition-all"
+      >
+        <span class="text-white duration-500" id="monthly">Monthly</span>
+
+        <form action="">
+          <label class="inline-flex items-center cursor-pointer" for="pricing-switch">
+            <input type="checkbox" value="" aria-label="pricing switch" id="pricing-switch" class="sr-only peer" />
+            <div
+              class="relative w-[65px] h-[32px] bg-primary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[33px] rtl:peer-checked:after:-translate-x-[22px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[24px] after:w-[24px] after:transition-all after:duration-500 after:ease-in-out peer-checked:bg-primary"
+            >
+            </div>
+          </label>
+        </form>
+
+        <span id="yearly" class="duration-500">Yearly</span>
+      </div>
+    </div>
+    <div class="section-content lg:px-20" data-aos="fade-up-sm" data-aos-delay="150">
+      <!-- MONTHLY PRICE CARDS -->
+      <div id="monthly-card-container">
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {
+            plans &&
+              plans.monthly &&
+              plans.monthly.length &&
+              plans.monthly
+                .slice(0, 3)
+                .map((plan, index) => (
+                  <PriceCard
+                    plan={plan.plan}
+                    audience={plan.audience}
+                    price={plan.price}
+                    price_prefix={plan.price_prefix}
+                    users={plan.users}
+                    features={plan.features}
+                    button={plan.button}
+                    isMiddle={index === 1}
+                  />
+                ))
+          }
+        </div>
+      </div>
+
+      <!--YEARLY PRICE CARDS-->
+      <div id="yearly-card-container" class="hidden">
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {
+            plans &&
+              plans.yearly &&
+              plans.yearly.length &&
+              plans.yearly
+                .slice(0, 3)
+                .map((plan, index) => (
+                  <PriceCard
+                    plan={plan.plan}
+                    audience={plan.audience}
+                    price={plan.price}
+                    price_prefix={plan.price_prefix}
+                    users={plan.users}
+                    features={plan.features}
+                    button={plan.button}
+                    isMiddle={index === 1}
+                  />
+                ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+import { priceTogglerInit } from "@/lib/utils/priceToggler";
+  document.addEventListener("astro:page-load", () => {
+    priceTogglerInit();
+  });
+</script>

@@ -1,0 +1,49 @@
+---
+import ImageMod from "./ImageMod.astro";
+
+type GalleryInterface = {
+  enable: boolean;
+  leftImage: string;
+  leftImageAlt: string;
+  rightImage: string;
+  rightImageAlt: string;
+};
+const gallery: GalleryInterface = Astro.props.gallery;
+---
+
+{
+  gallery && gallery.enable && (
+    <section class="section">
+      <div class="container">
+        <div class="grid md:grid-cols-12 gap-6">
+          <div class="md:col-span-8 relative overflow-hidden rounded-4xl">
+            {gallery.leftImage && (
+              <ImageMod
+                width={792}
+                height={500}
+                src={gallery.leftImage}
+                alt={gallery.leftImageAlt}
+                class="object-cover w-full h-full"
+                data-aos="fade-up-sm"
+                data-aos-delay="0"
+              />
+            )}
+          </div>
+          <div class="md:col-span-4 relative overflow-hidden rounded-4xl">
+            {gallery.rightImage && (
+              <ImageMod
+                width={384}
+                height={500}
+                src={gallery.rightImage}
+                alt={gallery.rightImageAlt}
+                class="object-cover w-full h-full"
+                data-aos="fade-up-sm"
+                data-aos-delay="100"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

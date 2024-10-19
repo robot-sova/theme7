@@ -1,0 +1,60 @@
+---
+import { getEntry } from "astro:content";
+
+interface Brand {
+  src: string;
+  alt: string;
+}
+
+interface TrustedByProps {
+  description: string;
+  brands: Brand[];
+}
+
+const { brands }: TrustedByProps = (await getEntry("sections", "trusted-brands")).data;
+---
+
+<section class="section overflow-hidden">
+  {
+    brands && brands.length && (
+      <div class="is-brands-slider">
+        <div class="swiper-wrapper">
+          {brands.map(({ src, alt }) => (
+            <div class="swiper-slide">
+              <img src={src} alt={alt} class="object-contain" />
+            </div>
+          ))}
+          {brands.map(({ src, alt }) => (
+            <div class="swiper-slide">
+              <img src={src} alt={alt} class="object-contain" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<script>
+  import { Swiper } from "swiper";
+  import "swiper/css";
+  import "swiper/css/pagination";
+  import { Autoplay } from "swiper/modules";
+
+  function initSwiper() {
+    new Swiper(".is-brands-slider", {
+      modules: [Autoplay],
+      centeredSlides: true,
+      speed: 3000,
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+      },
+      loop: true,
+      slidesPerView: "auto",
+      allowTouchMove: true,
+    });
+  }
+
+  document.addEventListener("astro:page-load", initSwiper);
+</script>

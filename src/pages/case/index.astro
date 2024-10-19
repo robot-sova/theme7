@@ -1,0 +1,49 @@
+---
+import CaseStudyCard from "@/components/CaseStudyCard.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import type { PageIndexProps } from "@/types";
+import { getEntry } from "astro:content";
+
+const CASE_FOLDER = "case";
+
+const postIndex = (await getEntry(CASE_FOLDER, "-index")).data as PageIndexProps;
+
+const cases = await getSinglePage(CASE_FOLDER);
+---
+
+<Base
+  title={postIndex.title}
+  meta_title={postIndex.meta_title}
+  image={postIndex.image}
+  description={postIndex.description}
+>
+  <PageHeader title={postIndex.page_header.title} subtitle={postIndex.page_header.subtitle} />
+  <section class="section">
+    <div class="container">
+      <div class="grid lg:grid-cols-2 gap-6" data-aos="fade-up-sm" data-aos-delay="150">
+        {
+          cases &&
+            cases.length &&
+            cases.map((c) => {
+              const { data } = c;
+              return (
+                <CaseStudyCard
+                  title={data.title}
+                  subtitle={data.subtitle}
+                  desc={data.desc}
+                  logo={data.logo}
+                  logoAlt={data.logoAlt}
+                  button={data.button}
+                  slug={c.slug}
+                />
+              );
+            })
+        }
+      </div>
+    </div>
+  </section>
+  <CallToAction />
+</Base>

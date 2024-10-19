@@ -1,0 +1,20 @@
+---
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import ClientTestimonials from "@/partials/ClientTestimonials.astro";
+import Faq from "@/partials/Faq.astro";
+import FeaturesBanner from "@/partials/FeaturesBanner.astro";
+import OurFeatures from "@/partials/OurFeatures.astro";
+import { getEntry } from "astro:content";
+
+const indexData = await getEntry("features", "-index");
+const featureIndexHeroData = indexData.data.hero;
+---
+
+<Base {...indexData.data}>
+  <FeaturesBanner featureIndexHeroData={featureIndexHeroData} />
+  <OurFeatures />
+  <ClientTestimonials />
+  <Faq />
+  <CallToAction />
+</Base>

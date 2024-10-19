@@ -1,0 +1,79 @@
+---
+import CaseStudyCard from "@/components/CaseStudyCard.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+export async function getStaticPaths() {
+  const CASE_FOLDER = "case";
+  const posts = await getSinglePage(CASE_FOLDER);
+  const paths = posts.map((post) => ({
+    params: {
+      single: post.slug,
+    },
+    props: { post },
+  }));
+
+  return paths;
+}
+
+const { post } = Astro.props;
+const { title, meta_title, description, image, logo, logoAlt, desc } = post.data;
+
+const CASE_FOLDER = "case";
+const cases = await getSinglePage(CASE_FOLDER);
+
+const { Content } = await post.render();
+---
+
+<Base title={title} meta_title={meta_title} description={description} image={image}>
+  <section class="section-page-heading">
+    <div class="container lg:px-20">
+      <div class="flex flex-col gap-6">
+        <div>
+          <h1
+            class="lg:text-[4.5rem] lg:leading-[1.2] mb-4"
+            data-aos="fade-up-sm"
+            data-aos-delay="0"
+            set:html={markdownify(title)}
+          />
+          <p class="mb-14" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(desc)} />
+          <div class="case-banner" data-aos="fade-up-sm" data-aos-delay="150">
+            <img src={logo} alt={logoAlt} draggable="false" class="relative z-20" />
+          </div>
+        </div>
+        <div class="content">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="text-h3 mb-14">Similar Case Studies Like this</h2>
+      <div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          {
+            cases &&
+              cases.length &&
+              cases.slice(0, 4).map((c) => {
+                const { data } = c;
+                return (
+                  <CaseStudyCard
+                    title={data.title}
+                    subtitle={data.subtitle}
+                    desc={data.desc}
+                    logo={data.logo}
+                    logoAlt={data.logoAlt}
+                    button={data.button}
+                    slug={c.slug}
+                  />
+                );
+              })
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

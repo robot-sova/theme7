@@ -1,0 +1,50 @@
+---
+import ImageMod from "@/components/ImageMod.astro";
+import PrimaryArrowBtn from "@/components/PrimaryArrowBtn.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+export async function getStaticPaths() {
+  const INTEGRATION_FOLDER = "integration";
+  const posts = await getSinglePage(INTEGRATION_FOLDER);
+  const paths = posts.map((post) => ({
+    params: {
+      single: post.slug,
+    },
+    props: { post },
+  }));
+
+  return paths;
+}
+
+const { post } = Astro.props;
+const { title, meta_title, description, image, subtitle, logo, desc, button } = post.data;
+
+const { Content } = await post.render();
+---
+
+<Base title={title} meta_title={meta_title} description={description} image={image}>
+  <section class="section-page-heading">
+    <div class="container lg:px-20">
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center gap-x-4" data-aos="fade-up-sm" data-aos-delay="0">
+          <ImageMod src={logo} height={80} width={80} alt={title} />
+          <div class="px-4 py-2 rounded-full bg-theme-light inline-block">
+            <span class="text-white text-sm font-light">Browser</span>
+          </div>
+        </div>
+        <div data-aos="fade-up-sm" data-aos-delay="100">
+          {title && <h2 class="text-h3 mb-3" set:html={markdownify(title)} />}
+          {subtitle && <p class="mb-6 text-lg font-medium text-white/70" set:html={markdownify(subtitle)} />}
+          {desc && <p class="mb-8" set:html={markdownify(desc)} />}
+          {button && button.enable && <PrimaryArrowBtn label={button.label} link={button.link} />}
+        </div>
+      </div>
+
+      <div class="content mt-12" data-aos="fade-up-sm" data-aos-delay="150">
+        <Content />
+      </div>
+    </div>
+  </section>
+</Base>

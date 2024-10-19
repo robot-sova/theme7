@@ -1,0 +1,47 @@
+---
+import OurMissionCard from "@/components/OurMissionCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+interface Card {
+  title: string;
+  description: string;
+  imageSrc: string;
+  aosDelay: string;
+}
+
+interface JourneyMissionProps {
+  title: string;
+  subtitle: string;
+  cards: Card[];
+}
+
+const { title, subtitle, cards }: JourneyMissionProps = (await getEntry("sections", "our-journey")).data;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-intro text-center lg:col-8 mx-auto">
+      {title && <h2 data-aos="fade-up-sm" class="title" set:html={markdownify(title)} />}
+
+      {subtitle && <p data-aos="fade-up-sm" data-aos-delay="100" class="subtitle" set:html={markdownify(subtitle)} />}
+    </div>
+
+    {
+      cards && cards.length > 0 && (
+        <div class="section-content lg:px-20">
+          <div class="grid md:grid-cols-2 gap-6">
+            {cards.map((card, index) => (
+              <OurMissionCard
+                aosDelay={++index * 100}
+                title={card.title}
+                description={card.description}
+                imageSrc={card.imageSrc}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</section>

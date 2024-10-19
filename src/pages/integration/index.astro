@@ -1,0 +1,58 @@
+---
+import IntegrationCard from "@/components/IntegrationCard.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import { getEntry } from "astro:content";
+
+interface PageIndexProps {
+  title: string;
+  meta_title: string;
+  image: string;
+  description: string;
+  page_header: {
+    title: string;
+    subtitle: string;
+  };
+}
+
+const INTEGRATION_FOLDER = "integration";
+
+const postIndex = (await getEntry(INTEGRATION_FOLDER, "-index")).data as PageIndexProps;
+
+const integrations = await getSinglePage(INTEGRATION_FOLDER);
+---
+
+<Base
+  title={postIndex.title}
+  meta_title={postIndex.meta_title}
+  image={postIndex.image}
+  description={postIndex.description}
+>
+  <PageHeader title={postIndex.page_header.title} subtitle={postIndex.page_header.subtitle} />
+  <section class="section">
+    <div class="container lg:px-20">
+      <div class="grid lg:grid-cols-3 gap-6">
+        {
+          integrations &&
+            integrations.length &&
+            integrations.map((integration, index) => {
+              const { data } = integration;
+              const aosDelay = 100 * (index % 3);
+              return (
+                <IntegrationCard
+                  title={data.title}
+                  desc={data.shortDesc}
+                  logoSrc={data.logo}
+                  link={integration.slug}
+                  aosDelay={aosDelay}
+                />
+              );
+            })
+        }
+      </div>
+    </div>
+  </section>
+  <CallToAction />
+</Base>

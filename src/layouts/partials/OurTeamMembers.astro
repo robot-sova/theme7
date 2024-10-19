@@ -1,0 +1,43 @@
+---
+import TeamCard from "@/components/TeamCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+interface TeamMember {
+  full_name: string;
+  position: string;
+  image: string;
+}
+
+interface TeamSectionProps {
+  title: string;
+  subtitle: string;
+  members: TeamMember[];
+}
+
+const { title, subtitle, members }: TeamSectionProps = (await getEntry("sections", "our-team-members")).data;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-intro text-center lg:col-8 mx-auto">
+      {title && <h2 class="title" data-aos="fade-up-sm" data-aos-delay="0" set:html={markdownify(title)} />}
+      {subtitle && <p class="subtitle" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(subtitle)} />}
+    </div>
+    <div class="section-content">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-aos="fade-up-sm" data-aos-delay="150">
+        {
+          members &&
+            members.length &&
+            members.map((member, index) => {
+              // equal aosDelay to 150, 300, 450 for each row
+              const aosDelay = 150 * (index % 3);
+              return (
+                <TeamCard image={member.image} name={member.full_name} position={member.position} aosDelay={aosDelay} />
+              );
+            })
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,157 @@
+---
+import PricingTableSingle from "@/components/PricingTableSingle.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+// Define the Props interface
+interface Button {
+  enable: boolean;
+  label: string;
+  link: string;
+}
+
+interface Plan {
+  plan: string;
+  audience: string;
+  price_prefix: string;
+  price: string;
+  users: string;
+  features: string[];
+  button: Button;
+}
+
+interface OurPricingPlanProps {
+  tableTitle: string;
+  tableSubtitle: string;
+  plans: {
+    monthly: Plan[];
+    yearly: Plan[];
+  };
+}
+
+const { plans }: OurPricingPlanProps = (await getEntry("sections", "pricing")).data;
+const { hero } = (await getEntry("pricing", "-index")).data;
+---
+
+{hero.tablePricing && hero.tablePricing.enable && <section class="section">
+    <div class="container lg:px-28">
+    <div class="section-intro pb-14 text-center">
+      {hero.tablePricing.title && <h2 class="text-h3 mb-4" data-aos="fade-up-sm" set:html={markdownify(hero.tablePricing.title)} />}
+      {
+        hero.tablePricing.subtitle && (
+          <p
+            class="hero.tablePricing.subtitle lg:w-3/5 mx-auto"
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            set:html={markdownify(hero.tablePricing.subtitle)}
+          />
+        )
+      }
+    </div>
+
+    <!-- Tablet to Desktop View -->
+    <table class="md:table hidden pricing-table" data-aos="fade-up-sm" data-aos-delay="150">
+      <thead>
+        <tr>
+          <th></th>
+          {
+            plans.monthly.map((plan) => (
+              <th>
+                <div class="pricing-table-head">
+                  <p class="title">{plan.plan}</p>
+                  <div class="subtitle">{plan.audience}</div>
+                  <div class="price-tag">
+                    <span>{plan.price_prefix}</span>
+                    <h2>{plan.price}</h2>
+                  </div>
+                  <div class="subtitle">{plan.users}</div>
+                </div>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Main features</td>
+          {plans.monthly.map((_, index) => <td />)}
+        </tr>
+        {
+          plans.monthly &&
+            plans.monthly.length &&
+            plans.monthly[0].features.map((feature, featureIndex) => {
+              return (
+                <tr>
+                  <td>{feature}</td>
+                  {plans.monthly.map((_, index) => (
+                    <td>
+                      <div>
+                        <img src="/images/icons/green_tick.svg" alt="tick" />
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              );
+            })
+        }
+        <tr>
+          <td></td>
+          {
+            plans.monthly &&
+              plans.monthly.length &&
+              plans.monthly.slice(0, 3).map((plan, index) => {
+                const isMiddle = index === 1;
+                return (
+                  <td>
+                    {plan.button && plan.button.enable && (
+                      <div>
+                        <a
+                          href={plan.button.link}
+                          class:list={[
+                            {
+                              "btn-sm lg:btn lg:text-base lg:font-medium bg-tertiary/50 text-white border border-theme-light hover:btn-primary":
+                                !isMiddle,
+                            },
+                            {
+                              "btn-sm lg:btn lg:text-base lg:font-medium text-center text-white bg-primary border border-primary":
+                                isMiddle,
+                            },
+                          ]}
+                        >
+                          {plan.button.label}
+                        </a>
+                      </div>
+                    )}
+                  </td>
+                );
+              })
+          }
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mobile View -->
+    <div class="block md:hidden space-y-5">
+      {
+        plans.monthly &&
+          plans.monthly.length &&
+          plans.monthly.slice(0, 3).map((plan, index) => {
+            return (
+              <div>
+                <PricingTableSingle
+                  plan={plan.plan}
+                  audience={plan.audience}
+                  price_prefix={plan.price_prefix}
+                  price={plan.price}
+                  users={plan.users}
+                  features={plan.features}
+                  button={plan.button}
+                  isMiddle={index === 1}
+                />
+              </div>
+            );
+          })
+      }
+    </div>
+  </div>
+</section>}

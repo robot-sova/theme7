@@ -1,0 +1,84 @@
+---
+import config from "@/config/config.json";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import dateFormat from "@/lib/utils/dateFormat";
+import { markdownify } from "@/lib/utils/textConverter";
+import ImageMod from "./components/ImageMod.astro";
+
+const COLLECTION_FOLDER = "blog";
+const { post } = Astro.props;
+
+const posts = await getSinglePage(COLLECTION_FOLDER);
+const { Content } = await post.render();
+const { title, description, author, categories, image, date, tags } = post.data;
+---
+
+<section class="section-page-heading lg:pt-10">
+  <div class="container">
+    <div class="flex flex-col items-center text-center">
+      <div class="bg-secondary rounded-4xl px-4 py-3 grid place-items-center mb-6 max-w-min">
+        {
+          categories &&
+            categories.map((cat: string) => (
+              <span class="text-[0.625rem] font-semibold capitalize text-white leading-none mt-[2px]">{cat}</span>
+            ))
+        }
+      </div>
+
+      <h1
+        class="lg:text-[4.5rem] lg:leading-[1.2] mb-4 lg:col-10 lg:mx-auto"
+        data-aos="fade-up-sm"
+        data-aos-delay="0"
+        set:html={markdownify(title)}
+      />
+      <p class="mb-14" data-aos="fade-up-sm" data-aos-delay="100">
+        Published on:
+        {date && <span>{dateFormat(date, "EEEE, MMM dd, yyyy")}</span>}
+        {author && <span>By {author}</span>}
+      </p>
+      <div class="self-stretch rounded-4xl overflow-hidden" data-aos="fade-up-sm" data-aos-delay="150">
+        <ImageMod
+          src="/images/blog/post_1.png"
+          width={1200}
+          height={475}
+          alt="sisyphus"
+          draggable={false}
+          class="max-h-[350px] lg:max-h-[475px] w-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="flex flex-col items-start lg:flex-row gap-12">
+      <div class="content w-full">
+        <Content />
+      </div>
+      {
+        config.params.newsletter && (
+          <div class="bg-theme-light/40 rounded-4xl border border-border px-6 py-14 lg:w-[450px] sticky top-10">
+            <div class="flex flex-col gap-4">
+              <h3 class="text-h5" set:html={markdownify(config.params.newsletter.title)} />
+              <p class="text-white font-light" set:html={markdownify(config.params.newsletter.subtitle)} />
+              {config.params.newsletter.button && (
+                <form action={config.params.newsletter.form_action}>
+                  <input
+                    type="email"
+                    name="Email"
+                    placeholder="Enter your email"
+                    required
+                    class="accent-primary bg-border rounded-lg border-border h-14 text-white px-5 w-full"
+                  />
+                  <button class="btn btn-primary w-full rounded-lg mt-4">
+                    {config.params.newsletter.button.label}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

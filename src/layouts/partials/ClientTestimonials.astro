@@ -1,0 +1,49 @@
+---
+import TestimonialCard from "@/components/TestimonialCard.astro";
+import { getEntry } from "astro:content";
+
+// Define the Props interface
+interface Testimonial {
+  quote: string;
+  name: string;
+  position: string;
+  image: string;
+}
+
+interface ClientTestimonialsProps {
+  title: string;
+  subtitle: string;
+  testimonials: Testimonial[];
+}
+
+const { title, subtitle, testimonials } = (await getEntry("sections", "client-testimonials"))
+  .data as ClientTestimonialsProps;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-intro lg:col-8 mx-auto text-center">
+      {title && <h2 class="title" data-aos="fade-up-sm" set:html={title} />}
+      {subtitle && <p class="subtitle w-5/6 mx-auto" data-aos="fade-up-sm" data-aos-delay="100" set:html={subtitle} />}
+    </div>
+    <div class="section-content">
+      <!--Testimonial Cards-->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-aos="fade-up-sm" data-aos-delay="150">
+        {
+          testimonials.map((testimonial, index) => {
+            const aosDelay = 100 * (index % 3);
+            return (
+              <TestimonialCard
+                aosDelay={aosDelay}
+                quote={testimonial.quote}
+                name={testimonial.name}
+                position={testimonial.position}
+                image={testimonial.image}
+              />
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+</section>

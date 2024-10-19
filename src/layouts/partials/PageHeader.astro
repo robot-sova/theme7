@@ -1,0 +1,38 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { title, subtitle, lastModified, desc } = Astro.props;
+---
+
+<section class="section-page-heading">
+  <div class="container text-center">
+    <div class="lg:px-8 flex flex-col items-center lg:col-10 mx-auto gap-4">
+      {
+        title && (
+          <h1
+            class="lg:text-[4.5rem] lg:leading-[1.2] capitalize"
+            data-aos="fade-up-sm"
+            set:html={markdownify(title)}
+          />
+        )
+      }
+      {
+        desc && (
+          <p class="text-lg text-white/70" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(desc)} />
+        )
+      }
+      {
+        subtitle && (
+          <p class="xl:col-10 mx-auto" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(subtitle)} />
+        )
+      }
+      {
+        lastModified && (
+          <p class="text-white/70" data-aos="fade-up-sm" data-aos-delay="150">
+            Last update: {lastModified}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>

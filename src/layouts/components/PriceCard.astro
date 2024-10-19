@@ -1,0 +1,43 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { plan, audience, price, price_prefix, users, features, button, isMiddle } = Astro.props;
+---
+
+<div
+  class:list={[
+    "shadow-inset shadow-shadow/50 hover:shadow-shadow transition-[colors_shadows] duration-500 border border-border rounded-4xl p-8 flex flex-col h-full",
+    { "bg-theme-light/55 hover:bg-theme-light ": isMiddle },
+  ]}
+  class=""
+>
+  <div class="pb-5 border-b-[2px] border-border/60 mb-5">
+    <p class="font-medium text-lg text-white" set:html={markdownify(plan)} />
+    <p class="text-sm font-light" set:html={markdownify(audience)} />
+  </div>
+  <div class="flex flex-col justify-between flex-grow gap-y-10 items-start">
+    <div class="flex flex-col gap-y-10 items-start">
+      <div>
+        <h3 class="flex items-center gap-x-1 mb-1">
+          <span>{price_prefix}</span>
+          <span 
+            class="data-count"   
+            data-count-yearly={price}
+            data-count-monthly={price} 
+            set:html={markdownify(price)} />
+        </h3>
+        <p class="text-sm font-light" set:html={markdownify(users)} />
+      </div>
+      <ul class="text-sm font-light green-tick-list">
+        {features.map((feature: string) => <li set:html={markdownify(feature)} />)}
+      </ul>
+    </div>
+    {
+      button && button.enable && (
+        <a class="btn btn-primary rounded-full mt-auto" href={button.link}>
+          {button.label}
+        </a>
+      )
+    }
+  </div>
+</div>

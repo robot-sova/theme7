@@ -1,0 +1,21 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import ArrowBtn from "./ArrowBtn.astro";
+import ImageMod from "./ImageMod.astro";
+
+const { title, subtitle, desc, logo, logoAlt, button, slug } = Astro.props;
+---
+
+<article
+  class="shadow-inset shadow-shadow/50 hover:shadow-shadow hover:bg-theme-light/10 transition-all duration-500 rounded-4xl p-8 lg:p-10"
+>
+  <div class="flex flex-col justify-between gap-8 h-full">
+    <div>
+      <ImageMod src={logo} alt={logoAlt} width={180} height={44} class="mb-12" />
+      <h4 class="mb-2" set:html={markdownify(title)} />
+      <p class="mb-6" set:html={markdownify(subtitle)} />
+      <p set:html={markdownify(desc)} />
+    </div>
+    <ArrowBtn label="Read Full Case Study" link={"/case/" + slug} />
+  </div>
+</article>

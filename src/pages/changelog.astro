@@ -1,0 +1,38 @@
+---
+import ChangelogCard from "@/components/ChangelogCard.astro";
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import type { IndexMDProps, PageHeaderProps } from "@/types";
+import { getEntry } from "astro:content";
+
+interface ChangelogCard {
+  title: string;
+  version: string;
+  image: string;
+  imageAlt: string;
+  desc: string;
+}
+
+interface ChangelogProps extends IndexMDProps {
+  page_header: PageHeaderProps;
+  changelogs: ChangelogCard[];
+}
+
+const contactIndexData = (await getEntry("changelog", "-index")).data as ChangelogProps;
+
+const { page_header, changelogs } = contactIndexData;
+---
+
+<Base {...contactIndexData}>
+  <PageHeader title={page_header.title} subtitle={page_header.subtitle} />
+  <section class="section">
+    <div class="container">
+      <div class="flex flex-col gap-10" data-aos="fade-up-sm" data-aos-delay="150">
+        {changelogs.map((changelog) => <ChangelogCard {...changelog} />)}
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>

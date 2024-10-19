@@ -1,0 +1,102 @@
+---
+import config from "@/config/config.json";
+import Base from "@/layouts/Base.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import type { IndexMDProps, PageHeaderProps } from "@/types";
+import { getEntry } from "astro:content";
+
+interface BookDemoProps extends IndexMDProps {
+  page_header: PageHeaderProps;
+}
+
+const pageIndexData = (await getEntry("book-demo", "-index")).data as BookDemoProps;
+const { contact_form_action }: { contact_form_action: string } = config.params;
+const { page_header } = pageIndexData;
+---
+
+<Base {...pageIndexData}>
+  <PageHeader title={page_header.title} subtitle={page_header.subtitle} />
+  <section class="section">
+    <div class="container lg:px-24">
+      <div
+        class="border border-border shadow-inset shadow-shadow/60 p-10 rounded-4xl"
+        data-aos="fade-up-sm"
+        data-aos-delay="150"
+      >
+        <form action={contact_form_action} method="post">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="col-span-2 sm:col-span-1">
+              <label for="firstName" class="form-label">First Name *</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                required
+                aria-required="true"
+                class="form-input"
+                placeholder="John"
+              />
+            </div>
+
+            <div class="col-span-2 sm:col-span-1">
+              <label for="lastName" class="form-label">Last Name *</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                class="form-input"
+                required
+                aria-required="true"
+                placeholder="Doe"
+              />
+            </div>
+
+            <div class="col-span-2">
+              <label for="email" class="form-label">Email *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                required
+                aria-required="true"
+                placeholder="johndoe@example.com"
+              />
+            </div>
+
+            <div class="col-span-2">
+              <label for="subject" class="form-label">Subject *</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                class="form-input"
+                required
+                aria-required="true"
+                placeholder="Your message subject"
+              />
+            </div>
+
+            <div class="col-span-2">
+              <label for="message" class="form-label">Write Message *</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="3"
+                class="form-input h-auto"
+                required
+                aria-required="true"
+                placeholder="Type your message here..."></textarea>
+            </div>
+
+            <div class="col-span-2">
+              <button type="submit" class="btn btn-primary w-full py-5 px-7 leading-none"> Send Message </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  <CallToAction />
+</Base>

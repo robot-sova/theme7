@@ -1,0 +1,29 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import ImageMod from "./ImageMod.astro";
+import SvgGrowthUpward from "./Svg/SvgGrowthUpward.astro";
+
+const { imageSrc, imageAlt, percentage, growthRate, desc, isStatsEnable } = Astro.props;
+---
+
+<div class="shadow-inset border border-border shadow-shadow/70 p-10 rounded-4xl">
+  <div class="flex flex-col gap-y-4 max-w-[350px] mx-auto">
+    <ImageMod width={350} height={245} src={imageSrc} alt={imageAlt} class="w-full" loading="lazy" />
+    {
+      isStatsEnable && (
+        <div class="p-4 rounded-2xl bg-theme-light w-full">
+          <div class="flex items-center gap-x-5 mb-1">
+            <h3 set:html={markdownify(percentage)} />
+            <div class="flex items-center gap-x-1">
+              <div class="text-primary">
+                <SvgGrowthUpward />
+              </div>
+              <span class="text-white text-sm font-semibold" set:html={markdownify(growthRate)} />
+            </div>
+          </div>
+          <p set:html={markdownify(desc)} />
+        </div>
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,46 @@
+{
+  "site": {
+    "title": "CloudPeak Astro",
+    "base_url": "https://cloudpeak-astro.vercel.app",
+    "base_path": "/",
+    "trailing_slash": false,
+    "favicon": "/images/favicon.png",
+    "logo": "/images/logo.svg",
+    "logo_width": "175",
+    "logo_height": "50",
+    "logo_text": "CloudPeak"
+  },
+
+  "settings": {
+    "pagination": 3,
+    "summary_length": 135,
+    "blog_folder": "blog"
+  },
+
+  "params": {
+    "contact_form_action": "#",
+    "footer_description": "Solutions that drive success and propel your business forward",
+    "copyright": "Copyright © {year} CloudPeak. <br /> All Rights Reserved",
+    "newsletter": {
+      "form_action": "#",
+      "title": "Stay Updated with the Latest Insights!",
+      "subtitle": "Get the best of financial technology news, tips, and trends delivered straight to your inbox",
+      "button": {
+        "enable": true,
+        "label": "Get Started"
+      }
+    }
+  },
+
+  "navigation_button": {
+    "enable": true,
+    "label": "Get Started",
+    "link": "/contact"
+  },
+
+  "metadata": {
+    "meta_author": "Themefisher",
+    "meta_image": "/images/og-image.png",
+    "meta_description": "Security Saas & Startup Template"
+  }
+}

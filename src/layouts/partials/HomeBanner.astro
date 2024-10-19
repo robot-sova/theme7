@@ -1,0 +1,133 @@
+---
+import ImageMod from "@/components/ImageMod.astro";
+import PrimaryArrowBtn from "@/components/PrimaryArrowBtn.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+interface BannerProps {
+  title: string;
+  description: string;
+  notification?: string;
+  buttons: { label: string; link: string; enable: boolean }[];
+  main_image: {
+    src: string;
+    alt: string;
+  };
+  background_image?: {
+    src: string;
+    alt?: string;
+    class: string;
+  };
+}
+
+const { title, description, notification, buttons, main_image, background_image }: BannerProps = (
+  await getEntry("sections", "home-banner")
+).data;
+---
+
+<section class="relative lg:pb-[350px] xl:pb-[450px] overflow-hidden">
+  <div class="container relative">
+    <div class="row justify-center">
+      <div class="xl:col-8 py-10 text-center">
+        <div class="flex flex-col items-center gap-8">
+          {
+            notification && (
+              <div class="overflow-hidden">
+                <div class="animate-headshot">
+                  <div class="shadow-inset-sm border border-border px-4 pt-1.5 pb-1 rounded-3xl text-white/85  leading-relaxed text-sm font-light [&_a]:hover:text-primary [&_a]:transition-colors [&_a]:duration-500">
+                    <p set:html={markdownify(notification)} />
+                  </div>
+                </div>
+              </div>
+            )
+          }
+          <div>
+            {
+              title && (
+                <h1
+                  data-aos="fade-up-sm"
+                  class="font-normal text-h2 lg:text-[5rem] lg:leading-[1.2] mb-3 tracking-tighter"
+                  set:html={markdownify(title)}
+                />
+              )
+            }
+            {
+              description && (
+                <div class="xl:col-9 mx-auto">
+                  <p data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(description)} />
+                </div>
+              )
+            }
+          </div>
+          {
+            buttons && (
+              <div class="flex flex-wrap gap-3 justify-center" data-aos="fade-up-sm" data-aos-delay="150">
+                {buttons
+                  .filter((btn) => btn.enable)
+                  .map(({ label, link }, index) =>
+                    index === 0 ? (
+                      <PrimaryArrowBtn label={label} link={link} />
+                    ) : (
+                      <a class="btn btn-secondary border border-tertiary/70" href={link}>
+                        {label}
+                      </a>
+                    )
+                  )}
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {
+    main_image && (
+      <div class="relative container-fluid">
+        <div class="mt-5 lg:mt-16 pb-10" data-aos="fade-up-sm" data-aos-delay="200">
+          <div class=" mx-auto w-full sm:w-2/3 xl:max-w-[959px] object-cover lg:absolute lg:top-0 lg:left-1/2 lg:-translate-x-1/2">
+            <div data-ac="tilt" data-ac-angle="1" class="rounded-4xl p-6 border border-white/15">
+              <ImageMod
+                class="rounded-3xl overflow-hidden"
+                src={main_image.src}
+                width={910}
+                height={680}
+                loading="eager"
+                alt={main_image.alt}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    background_image && (
+      <div
+        class="hidden lg:block absolute left-10 -bottom-20 w-full -z-10"
+        aria-hidden="true"
+        data-aos="fade-in"
+        data-aos-delay="800"
+        data-aos-duration="2000"
+        data-aos-easing="ease-out"
+      >
+        <img
+          src={background_image.src}
+          class="w-full max-w-[2000px] mx-auto lg:scale-110"
+          loading="eager"
+          width={1560}
+          height={924}
+          alt={background_image.alt || ""}
+        />
+      </div>
+    )
+  }
+</section>
+<script>
+  import initializeTiltCard from "@/lib/utils/tiltCard";
+
+  document.addEventListener("astro:page-load", function () {
+    initializeTiltCard();
+  });
+</script>

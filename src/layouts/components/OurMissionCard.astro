@@ -1,0 +1,16 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import ImageMod from "./ImageMod.astro";
+
+const { aosDelay, title, description, imageSrc } = Astro.props;
+---
+
+<div data-aos="fade-up-sm" data-aos-delay={aosDelay}>
+  <div class="border border-border shadow-inset p-10 rounded-4xl h-full flex flex-col justify-between">
+    <div class="mb-10">
+      <h2 class="mb-4 text-h4" set:html={markdownify(title)} />
+      <p set:html={markdownify(description)} />
+    </div>
+    {imageSrc && <ImageMod src={imageSrc} loading={"lazy"} width={520} height={480} class="w-full" alt="@@title" />}
+  </div>
+</div>

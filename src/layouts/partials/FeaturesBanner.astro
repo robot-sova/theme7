@@ -1,0 +1,68 @@
+---
+import ImageMod from "@/components/ImageMod.astro";
+import PrimaryArrowBtn from "@/components/PrimaryArrowBtn.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import type { Button } from "@/types";
+
+interface HeroSectionProps {
+  title: string;
+  description: string;
+  button: Button;
+  banner_image: {
+    src: string;
+    alt: string;
+  };
+  shape_image: {
+    enable: boolean;
+    src: string;
+  };
+}
+
+const { featureIndexHeroData } = Astro.props as { featureIndexHeroData: HeroSectionProps };
+const { banner_image, button, description, shape_image, title } = featureIndexHeroData;
+---
+
+<section class="section relative overflow-hidden lg:pt-20">
+  <div class="container">
+    <div class="row g-5">
+      <div class="lg:col-6 lg:self-center">
+        {title && <h1 class="text-h2 lg:text-h1 mb-6" data-aos="fade-up-sm" set:html={markdownify(title)} />}
+        {
+          description && (
+            <p class="mb-8" data-aos="fade-up-sm" data-aos-delay="100" set:html={markdownify(description)} />
+          )
+        }
+        {
+          button && button.enable && (
+            <div data-aos="fade-up-sm" data-aos-delay="150">
+              <PrimaryArrowBtn link={button.link} label={button.label} />
+            </div>
+          )
+        }
+      </div>
+      <div class="lg:col-6" data-aos="fade-left-sm" data-aos-delay="100" data-aos-duration="1000">
+        {
+          banner_image && (
+            <div class="lg:translate-x-[100px] xl:translate-x-[250px] relative p-6 border border-white/15 rounded-4xl mx-auto w-full lg:min-w-[620px] xl:min-w-[900px]">
+              <ImageMod
+                class="object-cover rounded-3xl overflow-hidden"
+                src={banner_image.src}
+                alt={banner_image.alt}
+                width={900}
+                height={570}
+              />
+
+              {shape_image && shape_image.enable && (
+                <img
+                  src="/images/shapes/vertical_blob.webp"
+                  class="w-full max-w-[400px] lg:max-w-[500px] absolute -right-[270px] lg:-right-[100px] xl:right-[150px] bottom-0 lg:bottom-1/2 lg:translate-y-1/2 -z-10"
+                  alt=""
+                />
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

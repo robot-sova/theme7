@@ -1,0 +1,90 @@
+---
+import PrimaryArrowBtn from "@/components/PrimaryArrowBtn.astro";
+import ProcessCard from "@/components/ProcessCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntry } from "astro:content";
+
+interface Button {
+  enable: boolean;
+  link: string;
+  label: string;
+}
+
+interface Stats {
+  enable: boolean;
+  percentage?: string;
+  growthRate?: string;
+  desc?: string;
+}
+
+interface Service {
+  title: string;
+  description: string;
+  imageSrc: string;
+  imageAlt: string;
+  button: Button;
+  stats: Stats;
+}
+
+interface CoreFeaturesProps {
+  title: string;
+  subtitle: string;
+  services: Service[];
+}
+
+const { title, subtitle, services }: CoreFeaturesProps = (await getEntry("sections", "our-features")).data;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-intro text-center lg:col-7 mx-auto">
+      {title && <h2 data-aos="fade-up-sm" class="title" set:html={markdownify(title)} />}
+      {
+        subtitle && (
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="100"
+            class="subtitle w-5/6 mx-auto"
+            set:html={markdownify(subtitle)}
+          />
+        )
+      }
+    </div>
+    <div class="section-content lg:px-20">
+      <div class="flex flex-col gap-16">
+        {
+          services &&
+            services.length &&
+            services.map((service, index) => {
+              const isEvenIndex = index % 2 !== 0;
+              return (
+                <div class="grid md:grid-cols-2 gap-10 xl:gap-16">
+                  <div class:list={[{ "order-1 md:order-2": isEvenIndex }]}>
+                    <ProcessCard
+                      imageSrc={service.imageSrc}
+                      imageAlt={service.imageAlt}
+                      isStatsEnable={service.stats.enable}
+                      percentage={service.stats.percentage}
+                      growthRate={service.stats.growthRate}
+                      desc={service.stats.desc}
+                    />
+                  </div>
+                  <div class:list={["self-center", { "order-1 md:order-1": isEvenIndex }]} class="self-center">
+                    <div class="space-y-8" data-aos="fade-up-sm">
+                      <div>
+                        {service.title && <h3 class="mb-4" set:html={markdownify(service.title)} />}
+                        {service.description && <p set:html={markdownify(service.description)} />}
+                      </div>
+                      {service.button && service.button.enable && (
+                        <PrimaryArrowBtn label={service.button.label} link={service.button.link} />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+        }
+      </div>
+    </div>
+  </div>
+</section>
